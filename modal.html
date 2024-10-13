@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Management</title>
+    <link rel="stylesheet" href="modal.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <header>
+      <h1>Task Management</h1>
+      <button class="open-modal-btn">Add Task</button>
+    </header>
+
+    <main class="cards-control flex">
+      <div class="cards1 flex">
+        <h2>In Progress</h2>
+        <div class="card-container"></div>
+      </div>
+      <div class="cards2 flex">
+        <h2>Done</h2>
+        <div class="card-container"></div>
+      </div>
+      <div class="cards3 flex">
+        <h2>Blocked</h2>
+        <div class="card-container"></div>
+      </div>
+    </main>
+
+    <div class="modal-container">
+      <div class="modal">
+        <form>
+          <div class="modal-header">
+            <h1>Add Task</h1>
+            <div class="modal-close-btn">X</div>
+          </div>
+
+          <label for="title">Title</label>
+          <input
+            id="title"
+            name="title"
+            required
+            placeholder="Enter task title..."
+          />
+
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            rows="4"
+            required
+            placeholder="Enter task description..."
+          ></textarea>
+
+          <label for="status">Status</label>
+          <select name="status" id="status" required>
+            <option value="In Progress">In Progress</option>
+            <option value="Blocked">Blocked</option>
+            <option value="Done">Done</option>
+          </select>
+
+          <button type="submit" class="submit">Add Task</button>
+        </form>
+      </div>
+    </div>
+    <script src="./modal.js"></script>
+  </body>
+</html>
