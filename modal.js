@@ -1,3 +1,4 @@
+// Selectors
 const form = document.querySelector("form");
 const titleInput = document.querySelector("#title");
 const descriptionInput = document.querySelector("#description");
@@ -8,6 +9,7 @@ const selectInput = document.querySelector("#status");
 
 // Create storage for tasks
 const tasks = {
+  "To Do": [],
   "In Progress": [],
   Done: [],
   Blocked: [],
@@ -24,9 +26,9 @@ closeModalBtn.addEventListener("click", () => {
 });
 
 // Template for each card
-const cardTemplate = (title, description, id) => {
+const cardTemplate = (title, description, id, status) => {
   return `
-    <div class="card">
+    <div class="card" draggable="true" ondragstart="drag(event)" data-id="${id}" data-status="${status}">
       <div>
         <h1>${title}</h1>
         <p>${description}</p>
@@ -38,23 +40,35 @@ const cardTemplate = (title, description, id) => {
 
 // Render cards for each status
 const render = () => {
-  const cards1 = document.querySelector(".cards1 .card-container");
-  const cards2 = document.querySelector(".cards2 .card-container");
-  const cards3 = document.querySelector(".cards3 .card-container");
+  const toDoContainer = document.querySelector(".cards .card-container");
+  const inProgressContainer = document.querySelector(".cards1 .card-container");
+  const doneContainer = document.querySelector(".cards2 .card-container");
+  const blockedContainer = document.querySelector(".cards3 .card-container");
 
-  cards1.innerHTML = ""; // Clear existing cards
-  cards2.innerHTML = "";
-  cards3.innerHTML = "";
+  // Clear existing cards
+  toDoContainer.innerHTML = "";
+  inProgressContainer.innerHTML = "";
+  doneContainer.innerHTML = "";
+  blockedContainer.innerHTML = "";
 
   Object.entries(tasks).forEach(([status, taskList]) => {
     taskList.forEach((task) => {
-      const taskCard = cardTemplate(task.title, task.description, task.id);
-      if (status === "In Progress") {
-        cards1.innerHTML += taskCard;
+      const taskCard = cardTemplate(
+        task.title,
+        task.description,
+        task.id,
+        status
+      );
+
+      // Add tasks to the correct container based on status
+      if (status === "To Do") {
+        toDoContainer.innerHTML += taskCard;
+      } else if (status === "In Progress") {
+        inProgressContainer.innerHTML += taskCard;
       } else if (status === "Done") {
-        cards2.innerHTML += taskCard;
+        doneContainer.innerHTML += taskCard;
       } else if (status === "Blocked") {
-        cards3.innerHTML += taskCard;
+        blockedContainer.innerHTML += taskCard;
       }
     });
   });
@@ -98,3 +112,34 @@ const deleteItem = (id) => {
   });
   render(); // Re-render the task lists
 };
+
+// Drag and drop
+function allowDrop(event) {
+  event.preventDefault();
+}
+
+function drag(event) {
+  event.dataTransfer.setData("text", event.target.dataset.id);
+  event.dataTransfer.setData("status", event.target.dataset.status);
+}
+
+function drop(event, newStatus) {
+  event.preventDefault();
+  const id = event.dataTransfer.getData("text");
+  const currentStatus = event.dataTransfer.getData("status");
+
+  if (currentStatus !== newStatus) {
+    const taskIndex = tasks[currentStatus].findIndex((task) => task.id === id);
+    const task = tasks[currentStatus].splice(taskIndex, 1)[0];
+    tasks[newStatus].push(task);
+    render();
+  }
+}
+
+// Add event listeners to the card containers for drop functionality
+document
+  .querySelectorAll(".cards, .cards1, .cards2, .cards3")
+  .forEach((container) => {
+    container.ondrop = (event) => drop(event, container.dataset.status);
+    container.ondragover = allowDrop;
+  });

@@ -20,15 +20,19 @@
     </header>
 
     <main class="cards-control flex">
-      <div class="cards1 flex">
+      <div class="cards flex" data-status="To Do">
+        <h2>To Do</h2>
+        <div class="card-container"></div>
+      </div>
+      <div class="cards1 flex" data-status="In Progress">
         <h2>In Progress</h2>
         <div class="card-container"></div>
       </div>
-      <div class="cards2 flex">
+      <div class="cards2 flex" data-status="Done">
         <h2>Done</h2>
         <div class="card-container"></div>
       </div>
-      <div class="cards3 flex">
+      <div class="cards3 flex" data-status="Blocked">
         <h2>Blocked</h2>
         <div class="card-container"></div>
       </div>
@@ -61,6 +65,7 @@
 
           <label for="status">Status</label>
           <select name="status" id="status" required>
+            <option value="To Do">To Do</option>
             <option value="In Progress">In Progress</option>
             <option value="Blocked">Blocked</option>
             <option value="Done">Done</option>
