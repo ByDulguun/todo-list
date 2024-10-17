@@ -15,6 +15,19 @@ const tasks = {
   Blocked: [],
 };
 
+// Save tasks to Local Storage
+const saveTasksToLocalStorage = () => {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+};
+
+// Load tasks from Local Storage
+const loadTasksFromLocalStorage = () => {
+  const storedTasks = localStorage.getItem("tasks");
+  if (storedTasks) {
+    Object.assign(tasks, JSON.parse(storedTasks));
+  }
+};
+
 // Open modal
 openModalBtn.addEventListener("click", () => {
   modal.classList.add("open");
@@ -94,6 +107,7 @@ form.addEventListener("submit", (event) => {
   };
 
   tasks[status].push(newTask); // Add task to the corresponding status
+  saveTasksToLocalStorage(); // Save to Local Storage
   render(); // Re-render the task lists
   modal.classList.remove("open"); // Close modal
 
@@ -108,6 +122,7 @@ const deleteItem = (id) => {
     const index = taskList.findIndex((task) => task.id === id);
     if (index !== -1) {
       taskList.splice(index, 1); // Remove task from the list
+      saveTasksToLocalStorage(); // Save to Local Storage
     }
   });
   render(); // Re-render the task lists
@@ -132,6 +147,7 @@ function drop(event, newStatus) {
     const taskIndex = tasks[currentStatus].findIndex((task) => task.id === id);
     const task = tasks[currentStatus].splice(taskIndex, 1)[0];
     tasks[newStatus].push(task);
+    saveTasksToLocalStorage(); // Save to Local Storage
     render();
   }
 }
@@ -143,3 +159,9 @@ document
     container.ondrop = (event) => drop(event, container.dataset.status);
     container.ondragover = allowDrop;
   });
+
+// Load tasks and render on page load
+window.addEventListener("load", () => {
+  loadTasksFromLocalStorage();
+  render(); // Render the loaded tasks
+});
